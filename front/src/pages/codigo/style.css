@@ -1,0 +1,46 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik&display=swap");
+
+.container-codigo {
+  background-color: #18273c;
+  color: #a9bbdf;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 20px;
+}
+
+.page-title{
+    display: flex;
+    align-items: center;    
+    flex-direction: row;
+    justify-content: center;
+    gap: 20px;
+}
+
+.python-icon {
+    color: #5795ec;
+    font-size: 32px;
+}
+.container-codigo .page-content {
+  width: 100%;
+  min-width: 0;
+}
+
+.container-codigo .codigo-python {
+  margin: 16px 0 0;
+  padding: 20px;
+  border-radius: 8px;
+  background: #06162d;
+  color: #e1e9f7;
+  text-align: left;
+  overflow-x: auto;
+  white-space: pre;
+}
+
+.container-codigo .codigo-python code {
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1.6;
+}

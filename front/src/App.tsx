@@ -1,14 +1,15 @@
-import { useState } from "react";
-import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/home/Index";
+import Codigo from "./pages/codigo/Index";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
-    <>
-      <Home />
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/codigo" element={<Codigo />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
