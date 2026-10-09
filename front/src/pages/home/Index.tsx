@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import Header from "../../components/header/Index";
 import "./styles.css";
 import borboleta from "../../assets/borboleta.png";
@@ -7,8 +8,31 @@ import { IoSparklesOutline } from "react-icons/io5";
 import { IoCloudUploadOutline } from "react-icons/io5";
 import { VscFolder } from "react-icons/vsc";
 import { VscSync } from "react-icons/vsc";
+import { IoIosImages } from "react-icons/io";
 
 function Home() {
+  const inputImagem = useRef<HTMLInputElement>(null);
+  const [arquivoImagem, setArquivoImagem] = useState<File | null>(null);
+  const [imagemOriginal, setImagemOriginal] = useState("");
+  const [erroImagem, setErroImagem] = useState("");
+
+  useEffect(() => {
+    if (!arquivoImagem) return;
+    const url = URL.createObjectURL(arquivoImagem);
+    setImagemOriginal(url);
+    return () => URL.revokeObjectURL(url);
+  }, [arquivoImagem]);
+
+  function selecionarImagem(arquivo?: File) {
+    if (!arquivo) return;
+    if (!["image/png", "image/jpeg"].includes(arquivo.type)) {
+      setErroImagem("Selecione uma imagem PNG ou JPG/JPEG.");
+      return;
+    }
+    setErroImagem("");
+    setArquivoImagem(arquivo);
+  }
+
   return (
     <div>
       <Header />
@@ -32,15 +56,38 @@ function Home() {
               <p>Arraste e solte a imagem aqui ou clique para selecionar.</p>
             </div>
           </div>
-          <div className="addImageButton">
+          <div
+            className="addImageButton"
+            onDragOver={(event) => event.preventDefault()}
+            onDrop={(event) => {
+              event.preventDefault();
+              selecionarImagem(event.dataTransfer.files[0]);
+            }}
+          >
+            <input
+              ref={inputImagem}
+              type="file"
+              accept="image/png,image/jpeg"
+              aria-label="Selecionar imagem original"
+              hidden
+              onChange={(event) => {
+                selecionarImagem(event.target.files?.[0]);
+                event.target.value = "";
+              }}
+            />
             <IoCloudUploadOutline className="upload" />
             <p>Arraste sua imagem aqui</p>
             <span>ou</span>
-            <button type="button" className="uploadbutton">
+            <button
+              type="button"
+              className="uploadbutton"
+              onClick={() => inputImagem.current?.click()}
+            >
               <VscFolder size={20} />
               Selecionar imagem
             </button>
             <small>Formatos aceitos: PNG, JPG, JPEG</small>
+            {erroImagem && <p role="alert">{erroImagem}</p>}
           </div>
         </div>
         <div className="rotateImage">
@@ -74,16 +121,36 @@ function Home() {
       </div>
       <div className="resultado">
         <div className="resultadoItem">
-          <IoSparklesOutline className="sparkle" />
-          <h5> Resultado da rotação</h5>
+          <div className="resultadoItem-header">
+            <IoSparklesOutline className="sparkle" />
+            <h5>Resultado da rotação</h5>
+          </div>
           <p> Após a rotação, sua imagem será exibida aqui.</p>
         </div>
         <div className="resultadoItem">
-          <h5> Original </h5>{" "}
+          <div className="resultadoItem-header">
+            <IoCloudUploadOutline className="resultadoItemImg" />
+            <h5>Original</h5>
+          </div>
+          <div className="imagem-preview">
+            {imagemOriginal ? (
+              <img
+                src={imagemOriginal}
+                alt={arquivoImagem?.name || "Imagem original"}
+              />
+            ) : (
+              <p>Selecione uma imagem para visualizar aqui.</p>
+            )}
+          </div>
         </div>
         <div className="resultadoItem">
-          {" "}
-          <h5> Rotacionada </h5>{" "}
+          <div className="resultadoItem-header">
+            <IoIosImages className="resultadoItemImg" />
+            <h5>Rotacionada</h5>
+          </div>
+          <div className="imagem-preview">
+            <p>A imagem rotacionada será exibida aqui.</p>
+          </div>
         </div>
       </div>
       <div className="informacoes">

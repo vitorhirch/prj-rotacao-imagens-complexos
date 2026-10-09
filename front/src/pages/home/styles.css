@@ -53,7 +53,7 @@ p {
   align-items: stretch;
   justify-content: center;
   gap: 25px;
-  padding: 12px 20px;
+  padding: 20px;
   border-radius: 8px;
   border: 0.25px none;
   background-color: #0b1d38;
@@ -204,7 +204,7 @@ p {
 .resultado {
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: stretch;
   justify-content: center;
   border: 0.25px none;
   background-color: #0b1d38;
@@ -217,16 +217,24 @@ p {
 }
 
 .resultado > div {
-  flex: 1;
+  flex: 1 1 0;
   min-width: 0;
+  box-sizing: border-box;
 }
 
 .resultadoItem {
-  border: 0.5px solid #102b52;
-  padding: 15px;
+  border: 0.5px none #102b52;
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
   text-align: center;
-  cursor: pointer;
   border-radius: 8px;
+}
+
+.resultadoItemImg{
+    align-items: left;
+  color: #5795ec;
+  font-size: 19px;
 }
 
 .sparkle{
@@ -322,6 +330,22 @@ p {
   padding: 0 24px;
 }
 
+.imagem-preview {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  padding: 12px;
+  border: 1px dashed #254365;
+  border-radius: 8px;
+}
+
+.imagem-preview img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
 /* Coloca o separador no segundo e no terceiro bloco */
 .infoItem + .infoItem {
   border-left: 1px solid #263b60;
@@ -371,4 +395,32 @@ p {
 .campo-angulo input:focus-visible {
   outline: 2px solid #599cff;
   outline-offset: 2px;
+}
+
+.resultadoItem-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  margin-bottom: 12px;
+}
+
+.resultadoItem-header h5 {
+  margin: 0;
+  text-align: left;
+}
+
+.resultadoItem-header > svg {
+  flex-shrink: 0;
+  font-size: 22px;
+}
+
+.resultado > .resultadoItem:first-child {
+  flex: 0.65 1 0;
+   justify-content: center;
+}
+
+.resultado,
+.resultado * {
+  cursor: default;
 }
