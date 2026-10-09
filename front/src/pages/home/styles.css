@@ -1,0 +1,374 @@
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik&display=swap");
+
+body {
+  font-family: "Open Sans", sans-serif;
+  background-color: #06162d;
+    margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  padding-left: 40px;
+  padding-right: 40px;
+}
+
+h2 {
+  color:#5795ec;
+  text-align: center;
+  margin-top: 20px;
+}
+
+h5 {
+  color: #5795ec;
+  text-align: center;
+  margin-top: 20px;
+}
+
+p {
+  color: #ffffffd4;
+  text-align: justify;
+  margin: 20px auto;
+  max-width: 600px;
+  font-size: 12px;
+}
+
+.imgBorboleta {
+  display: block;
+  margin: 20px auto;
+  max-width: 20%;
+  height: auto;
+}
+
+.container {
+  background-color: #06162d;
+  color: #a9bbdf;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+.principal {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: center;
+  gap: 25px;
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: 0.25px none;
+  background-color: #0b1d38;
+}
+
+.principal > div {
+  flex: 1 1 0;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 16px;
+  border-width: 1px;
+}
+
+.addImage {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid #193654;
+  border-radius: 10px;
+}
+
+.addImage-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+}
+
+.addImage-header > svg {
+  flex-shrink: 0;
+  color: #399cff;
+}
+
+.addImage-header h5 {
+  text-align: left;
+  margin: 0;
+  color: #e1e9f7;
+  font-size: 16px;
+}
+
+.addImage-header p {
+  text-align: left;
+  margin: 5px 0 0;
+  color: #a9bfde;
+  font-size: 12px;
+}
+
+.addImage .icone-image {
+  color: #399cff;
+  font-size: 28px;
+}
+
+.addImageButton .upload {
+  color: #399cff;
+  font-size: 36px;
+}
+
+.uploadbutton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  padding: 10px 20px;
+  border: none;
+  border-radius: 9px;
+
+  background: linear-gradient(100deg, #6265ff, #2585f6);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.uploadbutton:hover {
+  filter: brightness(1.08);
+}
+
+.addImageButton {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 170px;
+  padding: 16px;
+  border: 1px dashed #399cff;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.addImageButton p {
+  margin: 0;
+  color: #a9bfde;
+  text-align: center;
+  font-size: 14px;
+}
+
+.addImageButton span,
+.addImageButton small {
+  color: #a9bfde;
+  font-size: 12px;
+}
+
+.addImageButton .uploadbutton {
+  max-width: 100%;
+  font-family: inherit;
+}
+
+.addImageButton .uploadbutton svg {
+  flex-shrink: 0;
+}
+
+.addImageButton small {
+  margin-top: 4px;
+}
+
+.rotateImage {
+  border: 0.5px solid #102b52;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.rotateImage-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rotateImage-header h5 {
+  margin: 0;
+  text-align: left;
+  font-size: 16px;
+}
+
+.icone-rotacao {
+  flex-shrink: 0;
+  color: #ffffffd4;
+  font-size: 25px;
+}
+
+.resultado {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border: 0.25px none;
+  background-color: #0b1d38;
+  padding: 20px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 8px;
+  gap: 25px;
+  margin-top: 20px;
+}
+
+.resultado > div {
+  flex: 1;
+  min-width: 0;
+}
+
+.resultadoItem {
+  border: 0.5px solid #102b52;
+  padding: 15px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.sparkle{
+  align-items: left;
+  color: #5795ec;
+  font-size: 19px;
+}
+
+.informacoes {
+  display: flex;
+  background-color: #06162d;
+  color: #a9bbdf;
+  padding: 24px;
+  margin-top: 30px;
+}
+
+.controles-rotacao {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+}
+
+.angulos {
+  display: flex;
+  gap: 12px;
+}
+
+.angulos button {
+  flex: 1;
+  padding: 9px 0;
+  border: 1px solid #254365;
+  border-radius: 9px;
+  background: transparent;
+  color: #c4d4ef;
+  cursor: pointer;
+}
+
+.angulos button:hover {
+  border-color: #599cff;
+  background: #142b48;
+}
+
+.sentido-rotacao {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #599cff;
+}
+
+.sentido-rotacao select {
+  flex: 1;
+  min-width: 0;
+  padding: 4px 0;
+  border: none;
+  background: transparent;
+  color: #b0c5e6;
+  font-size: 14px;
+  appearance: none;
+  cursor: pointer;
+}
+
+.sentido-rotacao select option {
+  background: #0b1d35;
+  color: #b0c5e6;
+}
+
+.sentido-rotacao > svg {
+  pointer-events: none;
+}
+
+.botao-rotacionar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(100deg, #6265ff, #2585f6);
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.botao-rotacionar:hover {
+  filter: brightness(1.08);
+}
+
+.infoItem {
+  flex: 1;
+  padding: 0 24px;
+}
+
+/* Coloca o separador no segundo e no terceiro bloco */
+.infoItem + .infoItem {
+  border-left: 1px solid #263b60;
+}
+
+.infoItem h5 {
+  color: #5795ec;
+  margin: 0 0 8px;
+  text-align: left;
+}
+
+.infoItem p {
+  color: #a9bbdf;
+  margin: 0;
+  text-align: left;
+  font-size: 14px;
+}
+.campo-angulo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+}
+
+.campo-angulo label {
+  color: #a9bfde;
+  font-size: 12px;
+}
+
+.campo-angulo input {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  padding: 10px 12px;
+  border: 1px solid #254365;
+  border-radius: 8px;
+  background: #06162d;
+  color: #e1e9f7;
+  font: inherit;
+  font-size: 14px;
+}
+
+.campo-angulo input::placeholder {
+  color: #a9bfde;
+}
+
+.campo-angulo input:focus-visible {
+  outline: 2px solid #599cff;
+  outline-offset: 2px;
+}
