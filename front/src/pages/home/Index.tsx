@@ -15,13 +15,25 @@ function Home() {
   const [arquivoImagem, setArquivoImagem] = useState<File | null>(null);
   const [imagemOriginal, setImagemOriginal] = useState("");
   const [erroImagem, setErroImagem] = useState("");
+  const [angulo, setAngulo] = useState("");
+  const [imagemRotacionada, setImagemRotacionada] = useState("");
+  const [erroRotacao, setErroRotacao] = useState("");
+  const [rotacionando, setRotacionando] = useState(false);
+  const requisicaoRotacao = useRef<AbortController | null>(null);
 
   useEffect(() => {
-    if (!arquivoImagem) return;
-    const url = URL.createObjectURL(arquivoImagem);
-    setImagemOriginal(url);
-    return () => URL.revokeObjectURL(url);
-  }, [arquivoImagem]);
+    return () => {
+      if (imagemRotacionada) URL.revokeObjectURL(imagemRotacionada);
+    };
+  }, [imagemRotacionada]);
+
+  useEffect(() => () => requisicaoRotacao.current?.abort(), []);
+
+  useEffect(() => {
+    return () => {
+      if (imagemOriginal) URL.revokeObjectURL(imagemOriginal);
+    };
+  }, [imagemOriginal]);
 
   function selecionarImagem(arquivo?: File) {
     if (!arquivo) return;
@@ -30,7 +42,63 @@ function Home() {
       return;
     }
     setErroImagem("");
+    requisicaoRotacao.current?.abort();
+    requisicaoRotacao.current = null;
+    setRotacionando(false);
+    setImagemRotacionada("");
+    setErroRotacao("");
     setArquivoImagem(arquivo);
+    setImagemOriginal(URL.createObjectURL(arquivo));
+  }
+
+  async function rotacionarImagem() {
+    if (!arquivoImagem) {
+      setErroRotacao("Selecione uma imagem antes de rotacionar.");
+      return;
+    }
+    if (angulo.trim() === "" || !Number.isFinite(Number(angulo))) {
+      setErroRotacao("Informe um ângulo válido em graus.");
+      return;
+    }
+
+    requisicaoRotacao.current?.abort();
+    const controller = new AbortController();
+    requisicaoRotacao.current = controller;
+    setRotacionando(true);
+    setErroRotacao("");
+    setImagemRotacionada("");
+
+    const dados = new FormData();
+    dados.append("imagem", arquivoImagem);
+    dados.append("angulo", angulo);
+
+    try {
+      const resposta = await fetch("/api/rotacionar", {
+        method: "POST",
+        body: dados,
+        signal: controller.signal,
+      });
+      if (!resposta.ok) {
+        const erro = await resposta.json().catch(() => null);
+        throw new Error(erro?.erro || "Não foi possível rotacionar. Verifique se o backend está rodando.");
+      }
+      if (!resposta.headers.get("content-type")?.includes("image/png")) {
+        throw new Error("O servidor não retornou uma imagem PNG.");
+      }
+      const imagem = await resposta.blob();
+      if (!controller.signal.aborted) setImagemRotacionada(URL.createObjectURL(imagem));
+    } catch (erro) {
+      if (!controller.signal.aborted) {
+        setErroRotacao(erro instanceof TypeError
+          ? "Não foi possível conectar ao backend Python."
+          : erro instanceof Error ? erro.message : "Erro ao rotacionar a imagem.");
+      }
+    } finally {
+      if (requisicaoRotacao.current === controller) {
+        requisicaoRotacao.current = null;
+        setRotacionando(false);
+      }
+    }
   }
 
   return (
@@ -103,20 +171,28 @@ function Home() {
               type="number"
               step="any"
               placeholder="Ex.: 45"
+              value={angulo}
+              onChange={(event) => setAngulo(event.target.value)}
+              disabled={rotacionando}
             />
           </div>
           <div className="controles-rotacao">
             <div className="angulos">
-              <button type="button">45°</button>
-              <button type="button">90°</button>
-              <button type="button">180°</button>
-              <button type="button">270°</button>
+              {[45, 90, 180, 270].map((valor) => (
+                <button type="button" key={valor} disabled={rotacionando}
+                  aria-pressed={angulo !== "" && Number(angulo) === valor}
+                  onClick={() => setAngulo(String(valor))}>
+                  {valor}°
+                </button>
+              ))}
             </div>
-            <button type="button" className="botao-rotacionar">
+            <button type="button" className="botao-rotacionar"
+              onClick={rotacionarImagem} disabled={rotacionando || !arquivoImagem}>
               <VscSync size={22} />
-              Rotacionar imagem
+              {rotacionando ? "Rotacionando…" : "Rotacionar imagem"}
             </button>
           </div>
+          {erroRotacao && <p role="alert">{erroRotacao}</p>}
         </div>
       </div>
       <div className="resultado">
@@ -125,7 +201,7 @@ function Home() {
             <IoSparklesOutline className="sparkle" />
             <h5>Resultado da rotação</h5>
           </div>
-          <p> Após a rotação, sua imagem será exibida aqui.</p>
+          <p role="status">{rotacionando ? "Processando a imagem…" : imagemRotacionada ? "Rotação concluída. Compare as imagens abaixo." : "Após a rotação, sua imagem será exibida aqui."}</p>
         </div>
         <div className="resultadoItem">
           <div className="resultadoItem-header">
@@ -149,7 +225,11 @@ function Home() {
             <h5>Rotacionada</h5>
           </div>
           <div className="imagem-preview">
-            <p>A imagem rotacionada será exibida aqui.</p>
+            {imagemRotacionada ? (
+              <img src={imagemRotacionada} alt="Imagem rotacionada" />
+            ) : (
+              <p>{rotacionando ? "Processando a imagem…" : "A imagem rotacionada será exibida aqui."}</p>
+            )}
           </div>
         </div>
       </div>

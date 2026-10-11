@@ -1,7 +1,6 @@
 from math import cos, sin, radians
 from PIL import Image
 
-print("Projeto de rotacao iniciado")
 
 def rotacionar_ponto(x,y, angulo):
 
@@ -55,7 +54,7 @@ def rotacionar_em_torno_do_centro(x,y, centro_x, centro_y, novo_centro_x,
 
 def calcular_novo_tamanho(largura, altura, angulo):
     centro_x = (largura-1)/2
-    contro_y = (altura-1)/2
+    centro_y = (altura-1)/2
 
     cantos = [
         (0,0),
@@ -90,81 +89,79 @@ def calcular_novo_tamanho(largura, altura, angulo):
 
 
 
-imagem= Image.open("esboco.png").convert("RGBA")
-#abrimos a imagem
+def rotacionar_imagem(imagem, angulo):
+    """Recebe uma imagem PIL e um ?ngulo em graus e retorna a imagem girada."""
+    imagem = imagem.convert("RGBA")
+    # Garante que a imagem recebida tenha canal de transpar?ncia.
 
 
-largura,altura = imagem.size
-#descobrimos seu tamanho
+    largura,altura = imagem.size
+    #descobrimos seu tamanho
 
-centro_x = (largura -1) / 2
-centro_y = (altura -1) / 2
-#descobrimos seu centro
-
-angulo = 66
-
-nova_largura, nova_altura = calcular_novo_tamanho(
-    largura,
-    altura,
-    angulo
-)
-# tamanho da imagem de saída para rotação
+    centro_x = (largura -1) / 2
+    centro_y = (altura -1) / 2
+    #descobrimos seu centro
 
 
-novo_centro_x = (nova_largura-1) /2
-novo_centro_y = (nova_altura-1) /2
-#centro da nova imagem
+    nova_largura, nova_altura = calcular_novo_tamanho(
+        largura,
+        altura,
+        angulo
+    )
+    # tamanho da imagem de saída para rotação
 
 
-#criando uma nova imagem vazia
-nova_imagem = Image.new(
-     "RGBA",
-    (nova_largura, nova_altura),
-    (255, 255, 255, 0)
-)
+    novo_centro_x = (nova_largura-1) /2
+    novo_centro_y = (nova_altura-1) /2
+    #centro da nova imagem
 
+
+    #criando uma nova imagem vazia
+    nova_imagem = Image.new(
+         "RGBA",
+        (nova_largura, nova_altura),
+        (255, 255, 255, 0)
+    )
 
 
 
-for y in range(altura):
-    #anda linha por linha
-    for x in range (largura):
-        #outro for que anda pixel por pixel dentro da linha 
-        pixel = imagem.getpixel((x,y))
-        #isso pega a cor em cada pixel
 
-        novo_x, novo_y = rotacionar_em_torno_do_centro(
-            x,
-            y,
-            centro_x,
-            centro_y,
-            novo_centro_x,
-            novo_centro_y,
-            angulo
-        )
+    for y in range(altura):
+        #anda linha por linha
+        for x in range (largura):
+            #outro for que anda pixel por pixel dentro da linha 
+            pixel = imagem.getpixel((x,y))
+            #isso pega a cor em cada pixel
 
-        novo_x= round(novo_x)
-        novo_y= round(novo_y)
-        #arrendodamos os numeros
-
-        if 0 <= novo_x < nova_largura and 0 <= novo_y < nova_altura:
-            nova_imagem.putpixel(
-                (novo_x, novo_y),
-                pixel
+            novo_x, novo_y = rotacionar_em_torno_do_centro(
+                x,
+                y,
+                centro_x,
+                centro_y,
+                novo_centro_x,
+                novo_centro_y,
+                angulo
             )
 
-nova_imagem.save(
-    "imagem_rotacionada.png",
-    format="PNG"
-)
+            novo_x= round(novo_x)
+            novo_y= round(novo_y)
+            #arrendodamos os numeros
 
-print("Imagem salva com sucesso")
+            if 0 <= novo_x < nova_largura and 0 <= novo_y < nova_altura:
+                nova_imagem.putpixel(
+                    (novo_x, novo_y),
+                    pixel
+                )
 
-teste = Image.open("imagem_rotacionada.png")
+    return nova_imagem
 
-print(
-    "Resultado:",
-    teste.format,
-    teste.mode,
-    teste.size
-)
+
+# Este exemplo s? roda quando executamos: python rotacao.py
+# Importar a fun??o no backend n?o abre nem salva arquivos.
+if __name__ == "__main__":
+    print("Projeto de rotacao iniciado")
+    with Image.open("esboco.png") as imagem:
+        resultado = rotacionar_imagem(imagem, 66)
+    resultado.save("imagem_rotacionada.png", format="PNG")
+    print("Imagem salva com sucesso")
+    print("Resultado:", "PNG", resultado.mode, resultado.size)
