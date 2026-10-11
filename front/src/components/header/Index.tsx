@@ -8,11 +8,20 @@ function Header() {
       <Link className="headerTitle" to="/">
         Início
       </Link>
-      <h3 className="headerTitle"> Matemática </h3>
+      <Link className="headerTitle" to="/matematica">
+        Matemática
+      </Link>
       <Link className="headerTitle" to="/codigo">
         Código
       </Link>
-      <VscGithub className="icone-github" />
+      <a
+        href="https://github.com/vitorhirch/prj-rotacao-imagens-complexos.git"
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Abrir o projeto no GitHub"
+      >
+        <VscGithub className="icone-github" />
+      </a>
     </header>
   );
 }
