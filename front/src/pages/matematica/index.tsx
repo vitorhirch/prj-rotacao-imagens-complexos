@@ -5,34 +5,273 @@ function Matematica() {
   return (
     <div>
       <Header />
-      <div className="container-matematica">
+
+      <main className="container-matematica">
         <div className="page-title">
-          <h2>Matemática</h2>
+          <span className="page-tag">PRJ.4</span>
+          <h2>Matemática da rotação</h2>
+
+          <p className="page-description">
+            Entenda como cada pixel da imagem é representado por um número
+            complexo e como sua posição é modificada durante a rotação.
+          </p>
         </div>
+
         <article className="page-content">
-          <p>A rotação da imagem no arquivo <code>rotacao.py</code> usa <strong>números complexos e trigonometria</strong> para calcular uma nova posição para cada pixel, mantendo sua cor.</p>
-          <p>Cada pixel tem uma posição (x, y), representada no código pelo número complexo:</p>
-          <div className="formula">z = x + yi</div>
-          <p>A parte real representa a coordenada horizontal, e a parte imaginária representa a coordenada vertical. Na matemática, usamos <i>i</i> para a unidade imaginária; no Python, ela é representada por <code>j</code>.</p>
-          <p>Para girar esse ponto, a função <code>rotacionar_ponto</code> converte o ângulo de graus para radianos:</p>
-          <div className="formula">θ = (ângulo · π) / 180</div>
-          <p>Essa conversão é necessária porque as funções <code>cos</code> e <code>sin</code> recebem ângulos em radianos. Em seguida, o código constrói o número complexo:</p>
-          <div className="formula">r = cos(θ) + i sin(θ)</div>
-          <p>Esse número tem módulo igual a 1, pois cos<sup>2</sup>(θ) + sin<sup>2</sup>(θ) = 1. Por isso, multiplicar um ponto por ele altera sua direção, preservando sua distância até a origem. A rotação acontece na operação:</p>
-          <div className="formula">z′ = z · r</div>
-          <p>Desenvolvendo a multiplicação e usando i<sup>2</sup> = −1, obtemos:</p>
-          <div className="formula">x′ = x cos(θ) − y sin(θ)<br />y′ = x sin(θ) + y cos(θ)</div>
-          <p>Essas fórmulas calculam as coordenadas do ponto após a rotação. Por exemplo, ao girar o ponto (1, 0) em 90°, o resultado é (0, 1).</p>
-          <p>A função anterior gira os pontos ao redor da origem (0, 0). Para que a imagem gire ao redor de seu próprio centro, <code>rotacionar_em_torno_do_centro</code> primeiro transforma as coordenadas dos pixels em posições relativas ao centro:</p>
-          <div className="formula">x<sub>relativo</sub> = x − c<sub>x</sub><br />y<sub>relativo</sub> = c<sub>y</sub> − y</div>
-          <p>A inversão na coordenada vertical é necessária porque, em uma imagem, o eixo y cresce para baixo, enquanto no plano cartesiano ele cresce para cima. O centro é calculado por:</p>
-          <div className="formula">c<sub>x</sub> = (largura − 1) / 2<br />c<sub>y</sub> = (altura − 1) / 2</div>
-          <p>O código subtrai 1 porque os índices dos pixels começam em zero. Depois de aplicar a rotação, ele posiciona o ponto em relação ao centro da nova imagem:</p>
-          <div className="formula">x<sub>novo</sub> = c<sub>x, novo</sub> + x′<sub>relativo</sub><br />y<sub>novo</sub> = c<sub>y, novo</sub> − y′<sub>relativo</sub></div>
-          <p>Como uma imagem girada pode ocupar mais espaço, <code>calcular_novo_tamanho</code> também rotaciona seus quatro cantos. As diferenças entre as maiores e as menores coordenadas horizontais e verticais determinam as dimensões da imagem de saída.</p>
-          <p>Por fim, o programa percorre todos os pixels, calcula suas novas posições e arredonda as coordenadas, pois os pixels ocupam posições inteiras. Assim, a imagem é girada em <strong>66° no sentido anti-horário</strong>, conforme o ângulo definido no arquivo. Esse arredondamento e o envio direto dos pixels para a imagem de saída podem deixar pequenos espaços vazios ou fazer pixels diferentes ocupar a mesma posição.</p>
+          {/* ETAPA 1 */}
+          <section className="math-step">
+            <div className="step-number">01</div>
+
+            <div className="step-content">
+              <h3>Representando um pixel</h3>
+
+              <p>
+                Cada pixel possui uma posição formada pelas coordenadas{" "}
+                <strong>(x, y)</strong>. No algoritmo, essa posição pode ser
+                representada por um número complexo:
+              </p>
+
+              <div className="formula">z = x + yi</div>
+
+              <p>
+                A parte real representa a posição horizontal <strong>x</strong>,
+                enquanto a parte imaginária representa a posição vertical{" "}
+                <strong>y</strong>.
+              </p>
+
+              <div className="code-example">
+                <span className="code-label">Python</span>
+                <code>z = complex(x, y)</code>
+              </div>
+
+              <p className="observation">
+                Na matemática, a unidade imaginária é escrita como{" "}
+                <strong>i</strong>. No Python, utiliza-se <strong>j</strong>.
+              </p>
+            </div>
+          </section>
+
+          {/* ETAPA 2 */}
+          <section className="math-step">
+            <div className="step-number">02</div>
+
+            <div className="step-content">
+              <h3>Convertendo o ângulo</h3>
+
+              <p>
+                O usuário informa o ângulo da rotação em graus pela interface.
+                Entretanto, as funções <code>cos</code> e <code>sin</code> do
+                Python trabalham com radianos.
+              </p>
+
+              <div className="formula">θ = (ângulo · π) / 180</div>
+
+              <div className="code-example">
+                <span className="code-label">Python</span>
+                <code>theta = radians(angulo)</code>
+              </div>
+            </div>
+          </section>
+
+          {/* ETAPA 3 */}
+          <section className="math-step">
+            <div className="step-number">03</div>
+
+            <div className="step-content">
+              <h3>Criando o número de rotação</h3>
+
+              <p>
+                Com o ângulo convertido, construímos um segundo número complexo.
+                Ele não representa um pixel: ele representa{" "}
+                <strong>quanto o ponto será girado</strong>.
+              </p>
+
+              <div className="formula">r = cos(θ) + i sin(θ)</div>
+
+              <div className="code-example code-multiline">
+                <span className="code-label">Python</span>
+                <code>
+                  {`rotacao = complex(
+    cos(theta),
+    sin(theta)
+)`}
+                </code>
+              </div>
+
+              <p>
+                Esse número possui módulo igual a 1. Por isso, ele altera a
+                direção do ponto sem alterar sua distância em relação à origem.
+              </p>
+            </div>
+          </section>
+
+          {/* ETAPA 4 */}
+          <section className="math-step destaque">
+            <div className="step-number">04</div>
+
+            <div className="step-content">
+              <h3>Realizando a rotação</h3>
+
+              <p>
+                A rotação acontece quando multiplicamos o número complexo que
+                representa o ponto pelo número complexo que representa o giro:
+              </p>
+
+              <div className="formula formula-principal">z′ = z · r</div>
+
+              <div className="code-example">
+                <span className="code-label">Python</span>
+                <code>z_rotacionado = z * rotacao</code>
+              </div>
+
+              <p>
+                O resultado continua sendo um número complexo. A parte real
+                fornece a nova coordenada <strong>x</strong> e a parte
+                imaginária fornece a nova coordenada <strong>y</strong>.
+              </p>
+
+              <div className="formula">
+                x′ = x cos(θ) − y sin(θ)
+                <br />
+                y′ = x sin(θ) + y cos(θ)
+              </div>
+            </div>
+          </section>
+
+          {/* ETAPA 5 */}
+          <section className="math-step">
+            <div className="step-number">05</div>
+
+            <div className="step-content">
+              <h3>Rotacionando em torno do centro</h3>
+
+              <p>
+                A função anterior realiza a rotação em torno da origem{" "}
+                <strong>(0, 0)</strong>. Porém, a imagem precisa girar em torno
+                de seu próprio centro.
+              </p>
+
+              <p>
+                Primeiro, transformamos a posição do pixel em uma coordenada
+                relativa ao centro da imagem:
+              </p>
+
+              <div className="formula">
+                x<sub>relativo</sub> = x − c<sub>x</sub>
+                <br />y<sub>relativo</sub> = c<sub>y</sub> − y
+              </div>
+
+              <p>
+                O centro é calculado a partir da largura e da altura da imagem:
+              </p>
+
+              <div className="formula">
+                c<sub>x</sub> = (largura − 1) / 2
+                <br />c<sub>y</sub> = (altura − 1) / 2
+              </div>
+            </div>
+          </section>
+
+          {/* ETAPA 6 */}
+          <section className="math-step">
+            <div className="step-number">06</div>
+
+            <div className="step-content">
+              <h3>Por que o eixo Y é invertido?</h3>
+
+              <div className="axis-comparison">
+                <div>
+                  <span>Plano cartesiano</span>
+                  <strong>Y cresce para cima ↑</strong>
+                </div>
+
+                <div>
+                  <span>Imagem digital</span>
+                  <strong>Y cresce para baixo ↓</strong>
+                </div>
+              </div>
+
+              <p>
+                Por causa dessa diferença, o algoritmo inverte o eixo vertical
+                antes da rotação e faz a conversão inversa ao posicionar o pixel
+                na imagem resultante.
+              </p>
+
+              <div className="formula">
+                x<sub>novo</sub> = c<sub>x, novo</sub> + x′
+                <br />y<sub>novo</sub> = c<sub>y, novo</sub> − y′
+              </div>
+            </div>
+          </section>
+
+          {/* ETAPA 7 */}
+          <section className="math-step">
+            <div className="step-number">07</div>
+
+            <div className="step-content">
+              <h3>Calculando o tamanho da nova imagem</h3>
+
+              <p>
+                Dependendo do ângulo escolhido, uma imagem rotacionada pode
+                ocupar mais espaço do que a imagem original.
+              </p>
+
+              <p>
+                Para evitar cortes, a função <code>calcular_novo_tamanho</code>{" "}
+                rotaciona os quatro cantos da imagem e encontra os menores e
+                maiores valores de <strong>x</strong> e <strong>y</strong>.
+              </p>
+
+              <div className="formula">
+                nova largura = x<sub>máximo</sub> − x<sub>mínimo</sub>
+                <br />
+                nova altura = y<sub>máximo</sub> − y<sub>mínimo</sub>
+              </div>
+            </div>
+          </section>
+
+          {/* ETAPA 8 */}
+          <section className="math-step">
+            <div className="step-number">08</div>
+
+            <div className="step-content">
+              <h3>Mapeamento inverso dos pixels</h3>
+
+              <p>
+                Para construir a imagem rotacionada, o algoritmo percorre cada
+                posição da imagem de destino.
+              </p>
+
+              <p>
+                Em vez de perguntar para onde cada pixel original deve ir, o
+                programa faz o caminho inverso: para cada pixel da imagem final,
+                calcula de qual posição da imagem original ele deve vir.
+              </p>
+
+              <div className="formula">destino → rotação inversa → origem</div>
+
+              <p>
+                Para realizar esse caminho inverso, é utilizado o ângulo
+                negativo:
+              </p>
+
+              <div className="code-example">
+                <code>-angulo</code>
+              </div>
+
+              <p>
+                Depois que a posição correspondente é encontrada, a cor do pixel
+                original é copiada para a posição atual da imagem resultante.
+              </p>
+
+              <p className="observation">
+                Esse método reduz os espaços vazios que podiam aparecer quando
+                utilizávamos o mapeamento direto.
+              </p>
+            </div>
+          </section>
         </article>
-      </div>
+      </main>
     </div>
   );
 }

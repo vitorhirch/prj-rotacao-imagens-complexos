@@ -9,6 +9,7 @@ import { IoCloudUploadOutline } from "react-icons/io5";
 import { VscFolder } from "react-icons/vsc";
 import { VscSync } from "react-icons/vsc";
 import { IoIosImages } from "react-icons/io";
+import { Link } from "react-router-dom";
 
 function Home() {
   const inputImagem = useRef<HTMLInputElement>(null);
@@ -80,18 +81,26 @@ function Home() {
       });
       if (!resposta.ok) {
         const erro = await resposta.json().catch(() => null);
-        throw new Error(erro?.erro || "Não foi possível rotacionar. Verifique se o backend está rodando.");
+        throw new Error(
+          erro?.erro ||
+            "Não foi possível rotacionar. Verifique se o backend está rodando.",
+        );
       }
       if (!resposta.headers.get("content-type")?.includes("image/png")) {
         throw new Error("O servidor não retornou uma imagem PNG.");
       }
       const imagem = await resposta.blob();
-      if (!controller.signal.aborted) setImagemRotacionada(URL.createObjectURL(imagem));
+      if (!controller.signal.aborted)
+        setImagemRotacionada(URL.createObjectURL(imagem));
     } catch (erro) {
       if (!controller.signal.aborted) {
-        setErroRotacao(erro instanceof TypeError
-          ? "Não foi possível conectar ao backend Python."
-          : erro instanceof Error ? erro.message : "Erro ao rotacionar a imagem.");
+        setErroRotacao(
+          erro instanceof TypeError
+            ? "Não foi possível conectar ao backend Python."
+            : erro instanceof Error
+              ? erro.message
+              : "Erro ao rotacionar a imagem.",
+        );
       }
     } finally {
       if (requisicaoRotacao.current === controller) {
@@ -99,6 +108,19 @@ function Home() {
         setRotacionando(false);
       }
     }
+  }
+
+  function baixarImagem() {
+    if (!imagemRotacionada) return;
+
+    const link = document.createElement("a");
+
+    link.href = imagemRotacionada;
+    link.download = "imagem_rotacionada.png";
+
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   }
 
   return (
@@ -117,6 +139,7 @@ function Home() {
       </div>
       <div className="principal">
         <div className="addImage">
+          <span className="step-label">1. Imagem</span>
           <div className="addImage-header">
             <IoImage className="icone-image" />
             <div>
@@ -159,6 +182,7 @@ function Home() {
           </div>
         </div>
         <div className="rotateImage">
+          <span className="step-label">2. Ângulo</span>
           <div className="rotateImage-header">
             <GiAnticlockwiseRotation className="icone-rotacao" />
             <h5>Ângulo de rotação</h5>
@@ -179,15 +203,23 @@ function Home() {
           <div className="controles-rotacao">
             <div className="angulos">
               {[45, 90, 180, 270].map((valor) => (
-                <button type="button" key={valor} disabled={rotacionando}
+                <button
+                  type="button"
+                  key={valor}
+                  disabled={rotacionando}
                   aria-pressed={angulo !== "" && Number(angulo) === valor}
-                  onClick={() => setAngulo(String(valor))}>
+                  onClick={() => setAngulo(String(valor))}
+                >
                   {valor}°
                 </button>
               ))}
             </div>
-            <button type="button" className="botao-rotacionar"
-              onClick={rotacionarImagem} disabled={rotacionando || !arquivoImagem}>
+            <button
+              type="button"
+              className="botao-rotacionar"
+              onClick={rotacionarImagem}
+              disabled={rotacionando || !arquivoImagem}
+            >
               <VscSync size={22} />
               {rotacionando ? "Rotacionando…" : "Rotacionar imagem"}
             </button>
@@ -196,58 +228,100 @@ function Home() {
         </div>
       </div>
       <div className="resultado">
-        <div className="resultadoItem">
-          <div className="resultadoItem-header">
+        {/* CABEÇALHO DA ETAPA */}
+        <div className="resultado-topo">
+          <div className="resultado-titulo">
+            <span className="step-label">3. Resultado</span>
+
+            <p>Compare a imagem original com a imagem rotacionada.</p>
+          </div>
+
+          <div className="resultado-status">
             <IoSparklesOutline className="sparkle" />
-            <h5>Resultado da rotação</h5>
-          </div>
-          <p role="status">{rotacionando ? "Processando a imagem…" : imagemRotacionada ? "Rotação concluída. Compare as imagens abaixo." : "Após a rotação, sua imagem será exibida aqui."}</p>
-        </div>
-        <div className="resultadoItem">
-          <div className="resultadoItem-header">
-            <IoCloudUploadOutline className="resultadoItemImg" />
-            <h5>Original</h5>
-          </div>
-          <div className="imagem-preview">
-            {imagemOriginal ? (
-              <img
-                src={imagemOriginal}
-                alt={arquivoImagem?.name || "Imagem original"}
-              />
-            ) : (
-              <p>Selecione uma imagem para visualizar aqui.</p>
-            )}
+
+            <p role="status">
+              {rotacionando
+                ? "Processando a imagem…"
+                : imagemRotacionada
+                  ? "Rotação concluída com sucesso."
+                  : "O resultado será exibido abaixo."}
+            </p>
           </div>
         </div>
-        <div className="resultadoItem">
-          <div className="resultadoItem-header">
-            <IoIosImages className="resultadoItemImg" />
-            <h5>Rotacionada</h5>
+
+        {/* COMPARAÇÃO DAS IMAGENS */}
+        <div className="comparacao-imagens">
+          {/* ORIGINAL */}
+          <div className="resultadoItem">
+            <div className="resultadoItem-header">
+              <div className="resultadoItem-titulo">
+                <IoCloudUploadOutline className="resultadoItemImg" />
+                <h5>Original</h5>
+              </div>
+            </div>
+
+            <div className="imagem-preview">
+              {imagemOriginal ? (
+                <img
+                  src={imagemOriginal}
+                  alt={arquivoImagem?.name || "Imagem original"}
+                />
+              ) : (
+                <p>Selecione uma imagem para visualizar aqui.</p>
+              )}
+            </div>
           </div>
-          <div className="imagem-preview">
-            {imagemRotacionada ? (
-              <img src={imagemRotacionada} alt="Imagem rotacionada" />
-            ) : (
-              <p>{rotacionando ? "Processando a imagem…" : "A imagem rotacionada será exibida aqui."}</p>
-            )}
+
+          {/* ROTACIONADA */}
+          <div className="resultadoItem">
+            <div className="resultadoItem-header">
+              <div className="resultadoItem-titulo">
+                <IoIosImages className="resultadoItemImg" />
+                <h5>Rotacionada</h5>
+              </div>
+
+              {imagemRotacionada && (
+                <button
+                  type="button"
+                  className="botao-download"
+                  onClick={baixarImagem}
+                >
+                  Baixar imagem
+                </button>
+              )}
+            </div>
+
+            <div className="imagem-preview">
+              {imagemRotacionada ? (
+                <img src={imagemRotacionada} alt="Imagem rotacionada" />
+              ) : (
+                <p>
+                  {rotacionando
+                    ? "Processando a imagem…"
+                    : "A imagem rotacionada será exibida aqui."}
+                </p>
+              )}
+            </div>
           </div>
         </div>
       </div>
       <div className="informacoes">
-        <div className="infoItem">
+        <Link to="/matematica" className="infoItem">
           <h5>Como funciona?</h5>
-          <p>Entenda a matemática por trás da rotação.</p>
-        </div>
+          <p>
+            Entenda como os números complexos são utilizados para calcular a
+            rotação dos pixels.
+          </p>
 
-        <div className="infoItem">
+          <span className="info-link">Ver explicação →</span>
+        </Link>
+
+        <Link to="/codigo" className="infoItem">
           <h5>Código Python</h5>
-          <p>Veja o código completo e suas explicações.</p>
-        </div>
+          <p>Veja como a matemática da rotação foi transformada em código.</p>
 
-        <div className="infoItem">
-          <h5>Matemática</h5>
-          <p>Explore os números complexos e o passo a passo do cálculo.</p>
-        </div>
+          <span className="info-link">Ver implementação →</span>
+        </Link>
       </div>
     </div>
   );

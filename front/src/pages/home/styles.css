@@ -200,47 +200,220 @@ p {
   color: #ffffffd4;
   font-size: 25px;
 }
+/* =========================
+   RESULTADO
+========================= */
 
 .resultado {
   display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  justify-content: center;
-  border: 0.25px none;
-  background-color: #0b1d38;
-  padding: 20px;
-  text-align: center;
-  cursor: pointer;
-  border-radius: 8px;
-  gap: 25px;
+  flex-direction: column;
+
+  gap: 24px;
+
   margin-top: 20px;
+  padding: 24px;
+
+  background-color: #0d2341;
+
+  border-radius: 12px;
+
+  cursor: default;
 }
 
-.resultado > div {
-  flex: 1 1 0;
-  min-width: 0;
-  box-sizing: border-box;
+
+/* Cabeçalho da etapa 3 */
+
+.resultado-topo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 30px;
+
+  padding-bottom: 18px;
+
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-.resultadoItem {
-  border: 0.5px none #102b52;
+
+.resultado-titulo {
   display: flex;
   flex-direction: column;
-  padding: 12px;
+
+  align-items: flex-start;
+}
+
+
+.resultado-titulo .step-label {
+  margin-bottom: 5px;
+}
+
+
+.resultado-titulo p {
+  margin: 0;
+
+  color: #cbd5e1;
+
+  font-size: 0.9rem;
+
+  text-align: left;
+}
+
+
+/* Status da rotação */
+
+.resultado-status {
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+}
+
+
+.resultado-status p {
+  margin: 0;
+
+  color: #cbd5e1;
+
+  font-size: 0.9rem;
+
+  text-align: left;
+}
+
+
+.resultado-status .sparkle {
+  flex-shrink: 0;
+
+  color: #5795ec;
+
+  font-size: 22px;
+}
+
+
+/* Original + Rotacionada */
+
+.comparacao-imagens {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 24px;
+}
+
+
+.resultadoItem {
+  display: flex;
+  flex-direction: column;
+
+  min-width: 0;
+}
+
+
+/* Títulos Original / Rotacionada */
+
+.resultadoItem-header {
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+
+  margin-bottom: 12px;
+}
+
+
+.resultadoItem-titulo {
+  display: flex;
+
+  align-items: center;
+
+  gap: 8px;
+}
+
+
+.resultadoItem-titulo h5 {
+  margin: 0;
+
+  color: #5795ec;
+
+  text-align: left;
+}
+
+
+.resultadoItemImg {
+  flex-shrink: 0;
+
+  color: #5795ec;
+
+  font-size: 20px;
+}
+
+
+/* Área das imagens */
+
+.imagem-preview {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+  min-height: 420px;
+
+  box-sizing: border-box;
+
+  padding: 20px;
+
+  border: 1px dashed rgba(59, 145, 255, 0.35);
+  border-radius: 12px;
+
+  background: rgba(3, 18, 38, 0.22);
+
+  overflow: hidden;
+}
+
+
+.imagem-preview img {
+  display: block;
+
+  max-width: 100%;
+  max-height: 500px;
+
+  object-fit: contain;
+}
+
+
+.imagem-preview p {
+  margin: 0;
+
+  color: #cbd5e1;
+
   text-align: center;
+}
+
+
+/* Botão de download */
+
+.botao-download {
+  padding: 8px 14px;
+
+  border: 1px solid rgba(134, 239, 172, 0.35);
   border-radius: 8px;
+
+  background: transparent;
+
+  color: #86efac;
+
+  font-family: inherit;
+  font-weight: 600;
+
+  cursor: pointer;
 }
 
-.resultadoItemImg{
-    align-items: left;
-  color: #5795ec;
-  font-size: 19px;
-}
 
-.sparkle{
-  align-items: left;
-  color: #5795ec;
-  font-size: 19px;
+.botao-download:hover {
+  background: rgba(134, 239, 172, 0.08);
 }
 
 .informacoes {
@@ -330,21 +503,6 @@ p {
   padding: 0 24px;
 }
 
-.imagem-preview {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 200px;
-  padding: 12px;
-  border: 1px dashed #254365;
-  border-radius: 8px;
-}
-
-.imagem-preview img {
-  max-width: 100%;
-  max-height: 100%;
-  object-fit: contain;
-}
 
 /* Coloca o separador no segundo e no terceiro bloco */
 .infoItem + .infoItem {
@@ -373,6 +531,7 @@ p {
 .campo-angulo label {
   color: #a9bfde;
   font-size: 12px;
+  
 }
 
 .campo-angulo input {
@@ -396,13 +555,13 @@ p {
   outline: 2px solid #599cff;
   outline-offset: 2px;
 }
-
 .resultadoItem-header {
   display: flex;
+
   align-items: center;
+  justify-content: space-between;
+
   gap: 12px;
-  text-align: left;
-  margin-bottom: 12px;
 }
 
 .resultadoItem-header h5 {
@@ -415,12 +574,140 @@ p {
   font-size: 22px;
 }
 
-.resultado > .resultadoItem:first-child {
-  flex: 0.65 1 0;
-   justify-content: center;
+
+.resultadoItem-titulo h5 {
+  margin: 0;
 }
+
 
 .resultado,
 .resultado * {
   cursor: default;
 }
+
+.informacoes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.infoItem {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  padding: 22px;
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+
+  background: #273644;
+
+  text-decoration: none;
+
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.infoItem:hover {
+  transform: translateY(-3px);
+
+  border-color: rgba(134, 239, 172, 0.35);
+
+  background: #2d4050;
+}
+
+.infoItem h5 {
+  margin: 0;
+
+  color: #f8fafc;
+
+  font-size: 1.05rem;
+}
+
+.infoItem p {
+  margin: 0;
+
+  color: #cbd5e1;
+
+  line-height: 1.6;
+}
+
+.info-link {
+  margin-top: auto;
+  padding-top: 10px;
+
+  color: #86efac;
+
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.resultadoItem-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.resultadoItem-titulo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.botao-download {
+  padding: 8px 14px;
+  border: 1px solid rgba(134, 239, 172, 0.35);
+  border-radius: 8px;
+  background: transparent;
+  color: #86efac;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.botao-download:hover {
+  background: rgba(134, 239, 172, 0.08);
+}
+
+.step-label {
+  display: block;
+  width: 100%;
+
+  margin-bottom: 10px;
+
+  color: #86efac;
+
+  font-size: 0.75rem;
+  font-weight: 700;
+
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+
+  text-align: left;
+}
+
+
+@media (max-width: 800px) {
+  .resultado-topo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .comparacao-imagens {
+    grid-template-columns: 1fr;
+  }
+
+  .imagem-preview {
+    min-height: 300px;
+  }
+}
+
+@media (max-width: 700px) {
+  .informacoes {
+    grid-template-columns: 1fr;
+  }
+}
+

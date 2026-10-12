@@ -1,41 +1,200 @@
-﻿@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100..900;1,100..900&family=Rubik&display=swap");
+﻿@import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Roboto+Mono:wght@400;500&display=swap");
 
 .container-matematica {
-  max-width: 900px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 32px 24px;
+  padding: 40px 24px 80px;
 }
 
-.container-matematica .page-content {
-  box-sizing: border-box;
-  width: 100%;
-  margin-top: 24px;
-  padding: clamp(16px, 4vw, 32px);
-  border: none;
-  border-radius: 8px;
-  background-color: #273644;
-  color: #111827;
-  line-height: 1.8;
-  overflow-wrap: anywhere;
-}
-
-.container-matematica .page-content p {
-  width: 100%;
-  max-width: none;
-  box-sizing: border-box;
-  margin: 20px 0;
-  text-align: justify;
+.container-matematica .page-title {
+  margin-bottom: 24px;
   
 }
 
-.container-matematica .formula {
-  padding: 16px;
-  margin: 24px 0;
-  background: #f3f4f6;
+.page-tag {
+  display: inline-block;
+  margin-bottom: 8px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #86efac;
+}
+
+.container-matematica .page-title h2 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: clamp(2rem, 5vw, 3rem);
+   white-space: nowrap;
+}
+
+.page-description {
+  max-width: 720px;
+  margin-top: 12px;
+  color: #cbd5e1;
+  line-height: 1.7;
+}
+
+.container-matematica .page-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.math-step {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 20px;
+  padding: clamp(20px, 4vw, 32px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  background: #273644;
+  color: #e5e7eb;
+}
+
+.math-step.destaque {
+  border-color: rgba(134, 239, 172, 0.35);
+}
+
+.step-number {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 4px;
+  color: #86efac;
+  font-family: "Roboto Mono", monospace;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.step-content h3 {
+  margin: 0 0 12px;
+  color: #f8fafc;
+  font-size: 1.3rem;
+}
+
+.step-content p {
+  margin: 14px 0;
+  color: #cbd5e1;
+  line-height: 1.8;
+}
+
+.step-content code {
+  font-family: "Roboto Mono", monospace;
+}
+
+.formula {
+  margin: 20px 0;
+  padding: 18px 20px;
+  border-radius: 10px;
+  background: #f8fafc;
   color: #111827;
-  border-radius: 8px;
   text-align: center;
   font-family: "Cambria Math", "Times New Roman", serif;
-  font-size: 1.2rem;
-  line-height: 2;
+  font-size: clamp(1.05rem, 3vw, 1.3rem);
+  line-height: 1.9;
+}
+
+.formula-principal {
+  border: 1px solid rgba(134, 239, 172, 0.6);
+  font-size: 1.5rem;
+}
+
+.code-example {
+  position: relative;
+  margin: 18px 0;
+  padding: 18px;
+  border-radius: 10px;
+  background: #17212b;
+  overflow-x: auto;
+}
+
+.code-example code {
+  display: block;
+  color: #d1fae5;
+  white-space: pre-wrap;
+  line-height: 1.7;
+}
+
+.code-label {
+  display: block;
+  margin-bottom: 10px;
+  color: #86efac;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.observation {
+  padding-left: 14px;
+  border-left: 3px solid #86efac;
+}
+
+.axis-comparison {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.axis-comparison div {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 18px;
+  border-radius: 10px;
+  background: #17212b;
+}
+
+.axis-comparison span {
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.axis-comparison strong {
+  color: #f8fafc;
+}
+
+.flow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 24px 0;
+}
+
+.flow span {
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: #17212b;
+  color: #f8fafc;
+  font-size: 0.9rem;
+}
+
+.flow b {
+  color: #86efac;
+}
+
+@media (max-width: 700px) {
+  .container-matematica {
+    padding: 24px 16px 56px;
+  }
+
+  .math-step {
+    grid-template-columns: 1fr;
+  }
+
+  .step-number {
+    justify-content: flex-start;
+  }
+
+  .axis-comparison {
+    grid-template-columns: 1fr;
+  }
+
+  .flow {
+    justify-content: flex-start;
+  }
 }

@@ -2,87 +2,123 @@ from math import cos, sin, radians
 from PIL import Image
 
 
-def rotacionar_ponto(x,y, angulo):
+def rotacionar_ponto(x, y, angulo):
+    """
+    Rotaciona um ponto (x, y) em torno da origem (0, 0)
+    utilizando números complexos.
 
-#transfora a posição (x,y) em um número complexo
-    z = complex(x,y)
+    Parâmetros:
+        x: coordenada horizontal do ponto.
+        y: coordenada vertical do ponto.
+        angulo: ângulo de rotação em graus.
 
-#converta o ângulo informado em graus para radianos.
+    Retorno:
+        Tupla com as novas coordenadas (x, y).
+    """
+
+    # Representa o ponto como número complexo:
+    # z = x + yi
+    z = complex(x, y)
+
+    # Converte o ângulo de graus para radianos.
     theta = radians(angulo)
 
-#crie um número complexo de módulo 1 apontando na direção do ângulo desejado.
-    rotacao = complex( 
-    cos(theta),
-    sin(theta)
+    # Cria o número complexo que representa a rotação:
+    # cos(theta) + i * sin(theta)
+    rotacao = complex(
+        cos(theta),
+        sin(theta)
+    )
 
-)
+    # Multiplica o ponto pelo número complexo de rotação.
+    z_rotacionado = z * rotacao
 
-#gire o ponto através da multiplicação dos números complexos
-    z_rotacionado = z*rotacao
+    # A parte real representa o novo x.
+    # A parte imaginária representa o novo y.
+    return z_rotacionado.real, z_rotacionado.imag
 
-    return z_rotacionado.real, z_rotacionado.imag 
 
-#Explicação da função acima, temos uma função que recebe três informações x,y e angulo certo?
-# Então ela pega x e y e coloca em uma variavel z que transforma esses números em números complexos
-# assim z vale (x, yj) sendo j o simbolo que usamos para representar o complexo
-# o ângulo também precisa de uma conversão, por isso ele  vira  radiano, chamamos ele de theta e passamos ele pro cos e sin (cosesno e seno?)
-# mas para isso aplicamos o numero complexo no angulo e isso cria um novo numero complexo, que vai pegar cos (theta), sin (theta) -> igual fizemos com o x, y e transformar ele em:
-#cos(theta), sen(theta)j?  só que enão não representa o ponto e sim o quanto queremos rotacionar
-# dai para rotacionar o ponto criamos o z_rotacionado, que é o ponto z * a rotação, ou seja (x,yj)* (angulo convertido em cossenoe  seno)
 
-# o retorno transforma o numero complexo em coordenada novamente criando um novo x e novo y que é aquele x e y que foi rotacionado em numero complexo
-# a primeira função gira em torno de (0,0) mas nós precisamos fazê-la gira em torno do centro, pois se não ela sairia do campo de visão 
-# o centro não necessariamente é o centro, em uma imagem de 800x600 px por exmeplo o centro é (400, 300)
+def rotacionar_em_torno_do_centro(
+    x,
+    y,
+    centro_x,
+    centro_y,
+    novo_centro_x,
+    novo_centro_y,
+    angulo
+):
+    """
+    Rotaciona uma coordenada da imagem em torno de seu centro.
+    """
 
-def rotacionar_em_torno_do_centro(x,y, centro_x, centro_y, novo_centro_x,
-    novo_centro_y, angulo):
-
+    # Move o centro da imagem para a origem do plano cartesiano.
     x_relativo = x - centro_x
+
+    # Em imagens, o eixo Y cresce para baixo.
+    # Aqui fazemos a conversão para o plano cartesiano,
+    # onde Y cresce para cima.
     y_relativo = centro_y - y
-#Acima estamos criando um ponto refencial 
-    # o y fica diferente aqui poruqe na matemtica isso representa uma coisa, mas na imagem isso é diferente essa diferença é porque estamos trabalhando com imagem
 
-    novo_x_relativo, novo_y_relativo = rotacionar_ponto(x_relativo, y_relativo, angulo)
- #aplicando a rotação com a função rotacionar_ponto
- 
+    # Rotaciona o ponto relativo ao centro.
+    novo_x_relativo, novo_y_relativo = rotacionar_ponto(
+        x_relativo,
+        y_relativo,
+        angulo
+    )
 
-    novo_x = novo_centro_x + novo_x_relativo 
-    novo_y = novo_centro_y - novo_y_relativo 
-#aqui estamos colocando o centro de volta após a rotação
+    # Move a coordenada novamente para o centro
+    # da imagem de saída.
+    novo_x = novo_centro_x + novo_x_relativo
+    novo_y = novo_centro_y - novo_y_relativo
+
     return novo_x, novo_y
 
-
 def calcular_novo_tamanho(largura, altura, angulo):
-    centro_x = (largura-1)/2
-    centro_y = (altura-1)/2
+    """
+    Calcula o tamanho necessário da imagem resultante
+    para evitar cortes após a rotação.
+    """
 
+    centro_x = (largura - 1) / 2
+    centro_y = (altura - 1) / 2
+
+    # Coordenadas dos quatro cantos da imagem.
     cantos = [
-        (0,0),
-        (largura -1,0),
-        (0,altura -1),
-        (largura -1, altura -1)
+        (0, 0),
+        (largura - 1, 0),
+        (0, altura - 1),
+        (largura - 1, altura - 1)
     ]
 
-    xs = []
-    ys = []
+    coordenadas_x = []
+    coordenadas_y = []
 
     for x, y in cantos:
+
+        # Converte o canto para uma posição relativa ao centro.
         x_relativo = x - centro_x
         y_relativo = centro_y - y
 
+        # Rotaciona o canto.
         x_rotacionado, y_rotacionado = rotacionar_ponto(
             x_relativo,
             y_relativo,
             angulo
         )
 
-        xs.append(x_rotacionado)
-        ys.append(y_rotacionado)
-        #esse trecho faz com que seja guardado todos os valores de x rotacionados numa lista e os de y em outra
+        coordenadas_x.append(x_rotacionado)
+        coordenadas_y.append(y_rotacionado)
 
-    nova_largura = round(max(xs) - min(xs)) + 1
-    nova_altura = round(max(ys) - min(ys))  + 1  
-    # aqui ele pega o maior x max(xs) o menor min(xs) e subtrai para chegar no valor necessário
+    # A diferença entre o maior e o menor valor
+    # determina o espaço necessário.
+    nova_largura = round(
+        max(coordenadas_x) - min(coordenadas_x)
+    ) + 1
+
+    nova_altura = round(
+        max(coordenadas_y) - min(coordenadas_y)
+    ) + 1
 
     return nova_largura, nova_altura
 
@@ -90,64 +126,77 @@ def calcular_novo_tamanho(largura, altura, angulo):
 
 
 def rotacionar_imagem(imagem, angulo):
-    """Recebe uma imagem PIL e um ?ngulo em graus e retorna a imagem girada."""
+    """
+    Cria e retorna uma nova imagem rotacionada.
+
+   O algoritmo utiliza mapeamento inverso:
+   percorre cada posição da imagem resultante e calcula
+   qual posição correspondente deve ser buscada.
+   na imagem original.
+    """
+
+    # Padroniza a imagem para trabalhar com transparência.
     imagem = imagem.convert("RGBA")
-    # Garante que a imagem recebida tenha canal de transpar?ncia.
 
+    largura, altura = imagem.size
 
-    largura,altura = imagem.size
-    #descobrimos seu tamanho
+    # Centro da imagem original.
+    centro_x = (largura - 1) / 2
+    centro_y = (altura - 1) / 2
 
-    centro_x = (largura -1) / 2
-    centro_y = (altura -1) / 2
-    #descobrimos seu centro
-
-
+    # Descobre o tamanho necessário da imagem resultante.
     nova_largura, nova_altura = calcular_novo_tamanho(
         largura,
         altura,
         angulo
     )
-    # tamanho da imagem de saída para rotação
 
+    # Centro da imagem resultante.
+    novo_centro_x = (nova_largura - 1) / 2
+    novo_centro_y = (nova_altura - 1) / 2
 
-    novo_centro_x = (nova_largura-1) /2
-    novo_centro_y = (nova_altura-1) /2
-    #centro da nova imagem
-
-
-    #criando uma nova imagem vazia
+    # Cria uma nova imagem transparente.
     nova_imagem = Image.new(
-         "RGBA",
+        "RGBA",
         (nova_largura, nova_altura),
         (255, 255, 255, 0)
     )
 
+    # Percorre cada linha da imagem nova.
+    for novo_y in range(nova_altura):
 
+        # Percorre cada pixel da linha.
+        for novo_x in range(nova_largura):
 
-
-    for y in range(altura):
-        #anda linha por linha
-        for x in range (largura):
-            #outro for que anda pixel por pixel dentro da linha 
-            pixel = imagem.getpixel((x,y))
-            #isso pega a cor em cada pixel
-
-            novo_x, novo_y = rotacionar_em_torno_do_centro(
-                x,
-                y,
-                centro_x,
-                centro_y,
+            # Descobre de qual posição original
+            # veio cada pixel da imagem final.
+            x_original, y_original = rotacionar_em_torno_do_centro(
+                novo_x,
+                novo_y,
                 novo_centro_x,
                 novo_centro_y,
-                angulo
+                centro_x,
+                centro_y,
+                -angulo
             )
 
-            novo_x= round(novo_x)
-            novo_y= round(novo_y)
-            #arrendodamos os numeros
+            # A rotação pode gerar posições decimais.
+            # Como pixels ocupam coordenadas inteiras, arredondamos.
+            x_original = round(x_original)
+            y_original = round(y_original)
 
-            if 0 <= novo_x < nova_largura and 0 <= novo_y < nova_altura:
+            # Só buscamos o pixel caso a posição encontrada
+            # exista dentro da imagem original.
+            if (
+                0 <= x_original < largura
+                and 0 <= y_original < altura
+            ):
+                pixel = imagem.getpixel(
+                    (x_original, y_original)
+                )
+
+                # A posição atual da imagem de destino
+                # recebe a cor encontrada na imagem original.
                 nova_imagem.putpixel(
                     (novo_x, novo_y),
                     pixel
@@ -155,13 +204,20 @@ def rotacionar_imagem(imagem, angulo):
 
     return nova_imagem
 
-
-# Este exemplo s? roda quando executamos: python rotacao.py
-# Importar a fun??o no backend n?o abre nem salva arquivos.
+# Este exemplo abaixo apenas roda quando executamos: python rotacao.py
 if __name__ == "__main__":
-    print("Projeto de rotacao iniciado")
-    with Image.open("esboco.png") as imagem:
-        resultado = rotacionar_imagem(imagem, 66)
-    resultado.save("imagem_rotacionada.png", format="PNG")
+    print("Projeto de rotação iniciado")
+
+    imagem = Image.open("esboco.png")
+
+    resultado = rotacionar_imagem(
+        imagem,
+        45
+    )
+
+    resultado.save(
+        "imagem_rotacionada.png",
+        format="PNG"
+    )
+
     print("Imagem salva com sucesso")
-    print("Resultado:", "PNG", resultado.mode, resultado.size)
