@@ -17,10 +17,12 @@ function Home() {
   const [imagemOriginal, setImagemOriginal] = useState("");
   const [erroImagem, setErroImagem] = useState("");
   const [angulo, setAngulo] = useState("");
+  const [metodo, setMetodo] = useState("inverso");
   const [imagemRotacionada, setImagemRotacionada] = useState("");
   const [erroRotacao, setErroRotacao] = useState("");
   const [rotacionando, setRotacionando] = useState(false);
   const requisicaoRotacao = useRef<AbortController | null>(null);
+  const [zoom, setZoom] = useState(1);
 
   useEffect(() => {
     return () => {
@@ -72,6 +74,7 @@ function Home() {
     const dados = new FormData();
     dados.append("imagem", arquivoImagem);
     dados.append("angulo", angulo);
+    dados.append("metodo", metodo);
 
     try {
       const resposta = await fetch("/api/rotacionar", {
@@ -200,6 +203,36 @@ function Home() {
               disabled={rotacionando}
             />
           </div>
+          <div className="campo-metodo">
+            <label>Método de mapeamento</label>
+
+            <div className="metodos">
+              <button
+                type="button"
+                className={metodo === "direto" ? "ativo" : ""}
+                onClick={() => setMetodo("direto")}
+                disabled={rotacionando}
+              >
+                Direto
+              </button>
+
+              <button
+                type="button"
+                className={metodo === "inverso" ? "ativo" : ""}
+                onClick={() => setMetodo("inverso")}
+                disabled={rotacionando}
+              >
+                Inverso
+              </button>
+            </div>
+
+            <p className="descricao-metodo">
+              {metodo === "direto"
+                ? "Cada pixel da imagem original é enviado para uma nova posição."
+                : "Cada posição da imagem final busca o pixel correspondente na imagem original."}
+            </p>
+          </div>
+
           <div className="controles-rotacao">
             <div className="angulos">
               {[45, 90, 180, 270].map((valor) => (
@@ -293,7 +326,16 @@ function Home() {
 
             <div className="imagem-preview">
               {imagemRotacionada ? (
-                <img src={imagemRotacionada} alt="Imagem rotacionada" />
+                <div className="area-zoom">
+                  <img
+                    src={imagemRotacionada}
+                    alt="Imagem rotacionada"
+                    style={{
+                      transform: `scale(${zoom})`,
+                      transformOrigin: "center",
+                    }}
+                  />
+                </div>
               ) : (
                 <p>
                   {rotacionando
@@ -301,6 +343,32 @@ function Home() {
                     : "A imagem rotacionada será exibida aqui."}
                 </p>
               )}
+            </div>
+
+            <div className="controles-zoom">
+              <button
+                type="button"
+                onClick={() =>
+                  setZoom((valorAtual) => Math.max(0.5, valorAtual - 0.25))
+                }
+              >
+                -
+              </button>
+
+              <span>{Math.round(zoom * 100)}%</span>
+
+              <button
+                type="button"
+                onClick={() =>
+                  setZoom((valorAtual) => Math.min(4, valorAtual + 0.25))
+                }
+              >
+                +
+              </button>
+
+              <button type="button" onClick={() => setZoom(1)}>
+                100%
+              </button>
             </div>
           </div>
         </div>

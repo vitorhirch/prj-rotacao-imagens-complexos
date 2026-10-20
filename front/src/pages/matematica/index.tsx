@@ -169,6 +169,62 @@ function Matematica() {
                 c<sub>x</sub> = (largura − 1) / 2
                 <br />c<sub>y</sub> = (altura − 1) / 2
               </div>
+              <div className="sequencia-diagramas">
+                <div className="diagrama-centro">
+                  <div className="eixo eixo-x"></div>
+                  <div className="eixo eixo-y"></div>
+                  <div className="guia guia-horizontal"></div>
+                  <div className="guia guia-vertical"></div>
+
+                  <div className="ponto-centro">
+                    <span>Centro</span>
+                  </div>
+
+                  <div className="ponto-pixel">
+                    <span>Pixel (x, y)</span>
+                  </div>
+
+                  <div className="linha-relativa"></div>
+
+                  <div className="legenda-x-relativo">
+                    x − c<sub>x</sub>
+                  </div>
+
+                  <div className="legenda-y-relativo">
+                    c<sub>y</sub> − y
+                  </div>
+                </div>
+
+                <div className="conector-diagramas">
+                  <span>Coordenada relativa</span>
+                  <strong>↓</strong>
+                  <code>z = xrelativo + yrelativo·i</code>
+                  <strong>↓</strong>
+                  <span>Aplicamos a rotação complexa</span>
+                </div>
+
+                <div className="diagrama-rotacao">
+                  <div className="eixo eixo-x"></div>
+                  <div className="eixo eixo-y"></div>
+
+                  <div className="ponto-centro">
+                    <span>Centro</span>
+                  </div>
+
+                  <div className="vetor vetor-original"></div>
+                  <div className="vetor vetor-rotacionado"></div>
+
+                  <div className="ponto ponto-original"></div>
+
+                  <div className="ponto ponto-rotacionado"></div>
+
+                  <span className="label-ponto label-antes">Antes</span>
+
+                  <span className="label-ponto label-depois">Depois</span>
+
+                  <div className="indicador-angulo">θ</div>
+                </div>
+              </div>
             </div>
           </section>
 
@@ -235,39 +291,98 @@ function Matematica() {
             <div className="step-number">08</div>
 
             <div className="step-content">
-              <h3>Mapeamento inverso dos pixels</h3>
-
               <p>
-                Para construir a imagem rotacionada, o algoritmo percorre cada
-                posição da imagem de destino.
+                Depois de calcular a nova posição dos pixels, existem duas
+                formas de construir a imagem rotacionada: o{" "}
+                <strong>mapeamento direto</strong> e o{" "}
+                <strong>mapeamento inverso</strong>.
               </p>
 
-              <p>
-                Em vez de perguntar para onde cada pixel original deve ir, o
-                programa faz o caminho inverso: para cada pixel da imagem final,
-                calcula de qual posição da imagem original ele deve vir.
-              </p>
+              <div className="comparacao-mapeamentos">
+                <div className="mapeamento-card">
+                  <span className="mapeamento-tipo">Direto</span>
 
-              <div className="formula">destino → rotação inversa → origem</div>
+                  <div className="formula">origem → rotação → destino</div>
 
-              <p>
-                Para realizar esse caminho inverso, é utilizado o ângulo
-                negativo:
-              </p>
+                  <p>
+                    O algoritmo percorre cada pixel da imagem original e calcula
+                    para qual posição ele deve ser enviado na imagem final.
+                  </p>
 
-              <div className="code-example">
-                <code>-angulo</code>
+                  <div className="fluxo-mapeamento">
+                    <span>Pixel original</span>
+                    <strong>→</strong>
+                    <span>Calcula nova posição</span>
+                    <strong>→</strong>
+                    <span>Imagem final</span>
+                  </div>
+
+                  <div className="pixel-demo">
+                    <div className="pixel-linha">
+                      <span className="pixel preenchido"></span>
+                      <span className="pixel preenchido"></span>
+                      <span className="pixel vazio"></span>
+                      <span className="pixel preenchido"></span>
+                      <span className="pixel vazio"></span>
+                    </div>
+
+                    <span className="pixel-demo-legenda">
+                      Alguns destinos podem ficar sem pixel.
+                    </span>
+                  </div>
+
+                  <p className="observation">
+                    Como as coordenadas calculadas precisam ser arredondadas,
+                    alguns pixels podem cair na mesma posição e outros espaços
+                    podem ficar sem preenchimento.
+                  </p>
+                </div>
+
+                <div className="mapeamento-card">
+                  <span className="mapeamento-tipo">Inverso</span>
+
+                  <div className="formula">
+                    destino → rotação inversa → origem
+                  </div>
+
+                  <p>
+                    O algoritmo percorre cada posição da imagem final e calcula
+                    de qual pixel da imagem original deve buscar a cor.
+                  </p>
+
+                  <div className="fluxo-mapeamento">
+                    <span>Imagem final</span>
+                    <strong>→</strong>
+                    <span>Busca posição original</span>
+                    <strong>→</strong>
+                    <span>Copia o pixel</span>
+                  </div>
+
+                  <div className="pixel-demo">
+                    <div className="pixel-linha">
+                      <span className="pixel preenchido"></span>
+                      <span className="pixel preenchido"></span>
+                      <span className="pixel preenchido"></span>
+                      <span className="pixel preenchido"></span>
+                      <span className="pixel preenchido"></span>
+                    </div>
+
+                    <span className="pixel-demo-legenda">
+                      Cada posição final procura uma origem.
+                    </span>
+                  </div>
+
+                  <div className="code-example">
+                    <code>-angulo</code>
+                  </div>
+
+                  <p className="observation">
+                    Esse método reduz os espaços vazios porque cada posição da
+                    imagem final tenta buscar um pixel correspondente na imagem
+                    original.
+                  </p>
+                </div>
               </div>
-
-              <p>
-                Depois que a posição correspondente é encontrada, a cor do pixel
-                original é copiada para a posição atual da imagem resultante.
-              </p>
-
-              <p className="observation">
-                Esse método reduz os espaços vazios que podiam aparecer quando
-                utilizávamos o mapeamento direto.
-              </p>
             </div>
           </section>
         </article>

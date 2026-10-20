@@ -20,17 +20,21 @@ def rotacionar():
 
     try:
         angulo = float(request.form.get("angulo", ""))
+        metodo = request.form.get("metodo", "inverso")
     except ValueError:
         return jsonify(erro="Informe um ângulo válido em graus."), 400
     if not isfinite(angulo):
         return jsonify(erro="Informe um ângulo finito."), 400
+
+    metodo = request.form.get("metodo", "inverso")
 
     try:
         with Image.open(arquivo.stream) as imagem:
             if imagem.format not in ("PNG", "JPEG"):
                 return jsonify(erro="Selecione uma imagem PNG ou JPEG."), 400
             imagem.load()
-            resultado = rotacionar_imagem(imagem, angulo % 360)
+            resultado = rotacionar_imagem(imagem, angulo % 360, metodo)
+
     except (UnidentifiedImageError, OSError, Image.DecompressionBombError):
         return jsonify(erro="Não foi possível ler a imagem enviada."), 400
 

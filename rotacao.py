@@ -122,17 +122,84 @@ def calcular_novo_tamanho(largura, altura, angulo):
 
     return nova_largura, nova_altura
 
+def rotacionar_imagem_direto(imagem,angulo):
+    """
+    Cria e retorna uma nova imagem rotaciona
+    utilizando mapeamento direto.
+    
+    O algoritmo percorre os pixels da imagem original,
+    calcula para onde cada pixel deve ir e transfere
+    sua cor para a imagem resultante.
+    """
 
+    # Converte a imagem para RGBA.
+    imagem = imagem.convert("RGBA")
 
+    largura, altura = imagem.size
 
-def rotacionar_imagem(imagem, angulo):
+    # Centro da imagem original.
+    centro_x = (largura -1)/2
+    centro_y = (altura -1)/2
+
+    #Calcula o tamanho necessário da imagem resultante.
+    nova_largura, nova_altura = calcular_novo_tamanho(
+        largura, 
+        altura,
+        angulo
+    )
+
+    novo_centro_x = (nova_largura -1)/2
+    novo_centro_y = (nova_altura -1)/2
+
+    # Cria uma nova imagem transparente.
+    nova_imagem = Image.new(
+        "RGBA",
+        (nova_largura, nova_altura),
+        (255, 255, 255, 0)
+    )
+
+    # Percorre todos os pixels da imagem Original.
+    for y in range (altura):
+        for x in range(largura):
+
+            #Pega a cor do pixel original.
+            pixel = imagem.getpixel((x,y))
+
+            #Calcula para onde esse pixel deve ir.
+            novo_x, novo_y = rotacionar_em_torno_do_centro(
+                x,
+                y,
+                centro_x,
+                centro_y,
+                novo_centro_x,
+                novo_centro_y,
+                angulo
+            )
+
+            # Pixels precisam ocupar posições inteiras
+            novo_x = round(novo_x)
+            novo_y = round(novo_y)
+
+            # Só escreve se estiver dentro da imagem final.
+            if (
+                0 <= novo_x < nova_largura
+                and 0 <= novo_y < nova_altura
+            ): 
+                nova_imagem.putpixel(
+                    (novo_x, novo_y),
+                    pixel
+                )
+    return nova_imagem
+
+                
+def rotacionar_imagem_inverso(imagem, angulo):
     """
     Cria e retorna uma nova imagem rotacionada.
-
-   O algoritmo utiliza mapeamento inverso:
-   percorre cada posição da imagem resultante e calcula
-   qual posição correspondente deve ser buscada.
-   na imagem original.
+    utilizando mapeamento inverso.
+    O algoritmo utiliza mapeamento inverso:
+    percorre cada posição da imagem resultante e calcula
+    qual posição correspondente deve ser buscada.
+    na imagem original.
     """
 
     # Padroniza a imagem para trabalhar com transparência.
@@ -150,7 +217,7 @@ def rotacionar_imagem(imagem, angulo):
         altura,
         angulo
     )
-
+    
     # Centro da imagem resultante.
     novo_centro_x = (nova_largura - 1) / 2
     novo_centro_y = (nova_altura - 1) / 2
@@ -204,20 +271,59 @@ def rotacionar_imagem(imagem, angulo):
 
     return nova_imagem
 
+def rotacionar_imagem(imagem, angulo, metodo="inverso"):
+    """
+    Escolhe o método utilizado para realizar a rotação.
+    Métodos disponíveis:
+        "direto"
+        "inverso"
+    """
+
+    if metodo == "direto":
+        return rotacionar_imagem_direto(
+            imagem,
+            angulo
+        )
+    if metodo == "inverso":
+        return rotacionar_imagem_inverso(
+            imagem,
+            angulo
+        )
+
+    raise ValueError(
+        "Método inválido. Utilize 'direto' ou 'inverso'."
+    )
+
+
+
 # Este exemplo abaixo apenas roda quando executamos: python rotacao.py
 if __name__ == "__main__":
     print("Projeto de rotação iniciado")
 
     imagem = Image.open("esboco.png")
 
-    resultado = rotacionar_imagem(
+    angulo = 45
+
+    resultado_direto = rotacionar_imagem(
         imagem,
-        45
+        angulo,
+        "direto"
     )
 
-    resultado.save(
-        "imagem_rotacionada.png",
+    resultado_inverso = rotacionar_imagem(
+        imagem,
+        angulo,
+        "inverso"
+    )
+
+    resultado_direto.save(
+        "rotacao_direta.png",
         format="PNG"
     )
 
-    print("Imagem salva com sucesso")
+    resultado_inverso.save(
+        "rotacao_inversa.png",
+        format="PNG"
+    )
+
+    print("Imagens geradas com sucesso")
