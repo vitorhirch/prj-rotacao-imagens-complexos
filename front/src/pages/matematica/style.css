@@ -8,7 +8,6 @@
 
 .container-matematica .page-title {
   margin-bottom: 24px;
-  
 }
 
 .page-tag {
@@ -25,7 +24,7 @@
   margin: 0;
   color: #f8fafc;
   font-size: clamp(2rem, 5vw, 3rem);
-   white-space: nowrap;
+  white-space: nowrap;
 }
 
 .page-description {
@@ -43,11 +42,12 @@
 
 .math-step {
   display: grid;
-  grid-template-columns: 64px 1fr;
-  gap: 20px;
-  padding: clamp(20px, 4vw, 32px);
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 16px;
+  position: relative;
+  padding: 40px 48px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 14px;
+  border-radius: 16px;
   background: #273644;
   color: #e5e7eb;
 }
@@ -65,6 +65,11 @@
   font-family: "Roboto Mono", monospace;
   font-size: 1rem;
   font-weight: 600;
+  
+}
+
+.step-content {
+  min-width: 0;
 }
 
 .step-content h3 {
@@ -175,6 +180,446 @@
 
 .flow b {
   color: #86efac;
+}
+
+.diagrama-centro {
+  position: relative;
+
+  width: 100%;
+  height: 240px;
+
+  margin: 12px auto;
+
+  border: 1px solid #254365;
+  border-radius: 16px;
+
+  background:
+    linear-gradient(rgba(87, 149, 236, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(87, 149, 236, 0.06) 1px, transparent 1px);
+
+  background-size: 32px 32px;
+
+  overflow: hidden;
+}
+
+.eixo {
+  position: absolute;
+  background: #5795ec;
+  opacity: 0.6;
+}
+
+.eixo-x {
+  left: 0;
+  top: 50%;
+
+  width: 100%;
+  height: 1px;
+}
+
+.eixo-y {
+  top: 0;
+  left: 50%;
+
+  width: 1px;
+  height: 100%;
+}
+
+.ponto-centro,
+.ponto-pixel {
+  position: absolute;
+
+  width: 14px;
+  height: 14px;
+
+  border-radius: 50%;
+
+  transform: translate(-50%, -50%);
+}
+
+.ponto-centro {
+  left: 50%;
+  top: 50%;
+
+  background: #86efac;
+}
+
+.ponto-pixel {
+  left: 72%;
+  top: 35%;
+
+  background: #5795ec;
+}
+
+.ponto-centro span,
+.ponto-pixel span {
+  position: absolute;
+
+  left: 18px;
+  top: -4px;
+
+  white-space: nowrap;
+
+  color: #dce8f8;
+  font-size: 12px;
+}
+
+.linha-relativa {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  width: 23%;
+  height: 1px;
+
+  background: #86efac;
+
+  transform-origin: left center;
+  transform: rotate(-25deg);
+}
+
+.legenda-x-relativo,
+.legenda-y-relativo {
+  position: absolute;
+
+  padding: 4px 8px;
+
+  border-radius: 6px;
+
+  background: #0d2038;
+  color: #86efac;
+
+  font-size: 12px;
+}
+
+.legenda-x-relativo {
+  left: 59%;
+  top: 51%;
+}
+
+.legenda-y-relativo {
+  left: 50%;
+  top: 22%;
+}
+
+.guia {
+  position: absolute;
+  border-color: #5795ec;
+  opacity: 0.45;
+}
+
+.guia-horizontal {
+  left: 50%;
+  top: 35%;
+
+  width: 22%;
+  border-top: 1px dashed #5795ec;
+}
+
+.guia-vertical {
+  left: 72%;
+  top: 35%;
+
+  height: 15%;
+  border-left: 1px dashed #5795ec;
+}
+
+.diagrama-rotacao {
+  position: relative;
+
+  width: 100%;
+  height: 240px;
+
+  margin: 12px auto;
+
+  border: 1px solid #254365;
+  border-radius: 16px;
+
+  background:
+    linear-gradient(rgba(87, 149, 236, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(87, 149, 236, 0.06) 1px, transparent 1px);
+
+  background-size: 32px 32px;
+
+  overflow: hidden;
+}
+
+.vetor {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  height: 1px;
+
+  transform-origin: left center;
+
+  border-radius: 999px;
+}
+
+.vetor-original {
+  width: 85px;
+
+  background: #5795ec;
+
+  transform: rotate(-30deg);
+
+  transition: transform 0.8s ease;
+}
+.diagrama-rotacao:hover .vetor-original {
+  transform: rotate(-70deg);
+}
+.vetor-rotacionado {
+  width: 80px;
+
+  background: #86efac;
+
+  transform: rotate(-70deg);
+  opacity: 0.35;
+}
+
+.ponto {
+  position: absolute;
+
+  width: 14px;
+  height: 14px;
+
+  border-radius: 50%;
+
+  transform: translate(-50%, -50%);
+}
+
+.ponto-original {
+  left: 75%;
+  top: 31%;
+
+  background: #5795ec;
+
+  transition:
+    left 0.8s ease,
+    top 0.8s ease;
+}
+.diagrama-rotacao:hover .ponto-original {
+  left: 58%;
+  top: 18%;
+}
+.ponto-rotacionado {
+  left: 58%;
+  top: 18%;
+
+  background: #86efac;
+  opacity: 0.35;
+}
+
+.label-ponto {
+  position: absolute;
+
+  color: #dce8f8;
+  font-size: 12px;
+
+  transition: opacity 0.3s ease;
+}
+
+.label-antes {
+  left: 78%;
+  top: 28%;
+
+  opacity: 1;
+}
+
+.label-depois {
+  left: 61%;
+  top: 14%;
+
+  opacity: 0.35;
+}
+
+.indicador-angulo {
+  position: absolute;
+
+  left: 57%;
+  top: 35%;
+
+  color: #facc15;
+  font-size: 18px;
+  font-weight: 600;
+
+  opacity: 0;
+
+  transition: opacity 0.3s ease;
+}
+.diagrama-rotacao:hover .indicador-angulo {
+  opacity: 1;
+}
+
+.conector-diagramas {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+
+  color: #a9bfde;
+  font-size: 11px;
+  text-align: center;
+}
+
+.conector-diagramas strong {
+  color: #5795ec;
+  font-size: 24px;
+}
+
+.conector-diagramas code {
+  padding: 6px 10px;
+
+  border: 1px solid #254365;
+  border-radius: 8px;
+
+  background: #0d2038;
+  color: #86efac;
+}
+
+.comparacao-mapeamentos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+
+  margin-top: 24px;
+}
+
+.mapeamento-card {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  padding: 20px;
+
+  border: 1px solid #254365;
+  border-radius: 14px;
+
+  background: #0d2038;
+}
+
+.mapeamento-tipo {
+  width: fit-content;
+
+  padding: 5px 10px;
+
+  border-radius: 999px;
+
+  background: #142b48;
+  color: #86efac;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.fluxo-mapeamento {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  padding: 14px;
+
+  border-radius: 10px;
+
+  background: rgba(87, 149, 236, 0.06);
+}
+
+.fluxo-mapeamento span {
+  color: #dce8f8;
+  font-size: 12px;
+}
+
+.fluxo-mapeamento strong {
+  color: #5795ec;
+}
+
+.pixel-demo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  padding: 14px;
+
+  border-radius: 10px;
+
+  background: rgba(87, 149, 236, 0.04);
+}
+
+.pixel-linha {
+  display: flex;
+  gap: 6px;
+}
+
+.pixel {
+  width: 24px;
+  height: 24px;
+
+  border: 1px solid #5795ec;
+  border-radius: 4px;
+}
+
+.pixel.preenchido {
+  background: #5795ec;
+}
+
+.pixel.vazio {
+  background: transparent;
+  border-style: dashed;
+  opacity: 0.5;
+}
+
+.pixel-demo-legenda {
+  color: #a9bfde;
+  font-size: 12px;
+  text-align: center;
+}
+
+.sequencia-diagramas {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+
+  margin-top: 24px;
+}
+
+.bloco-diagrama {
+  min-width: 0;
+}
+
+.diagrama-etapa {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #86efac;
+
+  font-size: 12px;
+  font-weight: 600;
+}
+
+@media (max-width: 800px) {
+  .sequencia-diagramas {
+    grid-template-columns: 1fr;
+  }
+
+  .conector-diagramas {
+    margin: 4px 0;
+  }
+
+  .conector-diagramas strong {
+    transform: rotate(90deg);
+  }
+}
+
+@media (max-width: 760px) {
+  .comparacao-mapeamentos {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 700px) {
